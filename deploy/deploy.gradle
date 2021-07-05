@@ -78,6 +78,10 @@ afterEvaluate {
     }
 }
 
+signing {
+    sign publishing.publications
+}
+
 artifacts {
     archives androidSourcesJar
     archives androidJavadocsJar

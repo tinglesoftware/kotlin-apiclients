@@ -10,6 +10,7 @@ trigger:
       - refs/tags/*
 
 variables:
+- group: 'Tingle GPG Key' # contains SigningKeyId, SigningName, and SigningPassword
 - name: wrapperScript
   value: 'gradlew' # 'gradlew.bat' is for a Windows environment, use 'gradlew' for UNIX e.g. Ubuntu/MacOS
 

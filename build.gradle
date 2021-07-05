@@ -32,12 +32,26 @@ allprojects {
     }
 }
 
-ext{
+ext {
     groupId = 'software.tingle'
     publishVersion = System.getenv("BUILD_BUILDNUMBER") ?: "1.0"
     publishUsername = System.getenv("PUBLISHING_USERNAME") ?: ""
     publishPassword = System.getenv("PUBLISHING_PASSWORD") ?: "dummy"
     publishUrl = System.getenv("PUBLISHING_URL") ?: "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+}
+
+ext["signing.keyId"] = System.getenv("SigningKeyId")
+ext["signing.password"] = System.getenv("SigningPassword")
+ext["signing.secretKeyRingFile"] = System.getenv("")
+
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            username = publishUsername
+            password = publishPassword
+        }
+    }
 }
 
 task clean(type: Delete) {
