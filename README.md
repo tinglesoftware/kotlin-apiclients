@@ -27,7 +27,7 @@ making various server request.
 Add `abstractions` to your `build.gradle` dependencies.
 
 ```gradle
-implementation 'tingle.software.api:abstractions:VERSION_NUMBER'
+implementation 'software.tingle:abstractions:VERSION_NUMBER'
 ```
 
 # Examples

@@ -1,6 +1,9 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'digital.wup.android-maven-publish'
+plugins {
+    id "com.android.library"
+    id "kotlin-android"
+    id "maven-publish"
+    id "signing"
+}
 
 android {
     compileSdkVersion Integer.parseInt("${compile_sdk_version}")
@@ -33,24 +36,54 @@ android {
 }
 
 afterEvaluate {
+    // See https://developer.android.com/studio/build/maven-publish-plugin
+    // and https://docs.gradle.org/current/userguide/publishing_maven.html
+    // and https://proandroiddev.com/android-maven-publish-for-your-libraries-b76ad47677df
     publishing {
+        // Creates a Maven publication called "release".
         publications {
-            mavenAar(MavenPublication) {
-                from components.release
+            release(MavenPublication) {
+                groupId = "${groupId}"
+                artifactId = "${project.name}"
+                version = publishVersion
 
-                groupId "${group_id}"
-                artifactId "${project.name}"
-                version getPublishVersion()
-//            artifact("$buildDir/outputs/aar/$project.name-release.aar")
+                pom {
+                    name = project.name
+                    packaging = "aar"
+                    description = "An abstract API client library build on top of Okhttp library to ease the process of making various server request"
+                    url = "https://github.com/tinglesoftware/kotlin-apiclients"
+
+                    scm {
+                        url = "https://github.com/tinglesoftware/kotlin-apiclients"
+                        connection = "scm:git:github.com/tinglesoftware/kotlin-apiclients"
+                        developerConnection = "scm:git:ssh://github.com/tinglesoftware/kotlin-apiclients.git"
+                    }
+
+                    licenses {
+                        license {
+                            name = "MIT License"
+                            url = "https://raw.githubusercontent.com/tinglesoftware/kotlin-apiclients/main/LICENSE"
+                            distribution = "repo"
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = "tingle-software"
+                            name = "Tingle Software"
+                            email = "info@tingle.software"
+                        }
+                    }
+                }
             }
         }
 
         repositories {
             maven {
-                url getPublishUrl()
+                url publishUrl
                 credentials {
-                    username getPublishUserName()
-                    password getPublishPassword()
+                    username publishUsername
+                    password publishPassword
                 }
             }
         }
