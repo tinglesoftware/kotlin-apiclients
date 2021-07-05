@@ -12,10 +12,6 @@ trigger:
 variables:
 - name: wrapperScript
   value: 'gradlew' # 'gradlew.bat' is for a Windows environment, use 'gradlew' for UNIX e.g. Ubuntu/MacOS
-- name: PUBLISHING_URL
-  value: 'https://pkgs.dev.azure.com/tingle/_packaging/tingle-maven/maven/v1'
-- name: PACKAGING_USERNAME
-  value: 'AZURE_ARTIFACTS'
 
 
 stages: 
