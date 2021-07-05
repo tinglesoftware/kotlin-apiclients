@@ -6,16 +6,14 @@ buildscript {
     ext.compile_sdk_version = 30
     ext.target_sdk_version = 30
 
-    ext.group_id = 'tingle.software.api'
-    ext.vsts_url = 'https://pkgs.dev.azure.com/tingle/_packaging/tingle-maven/maven/v1'
-
     repositories {
         google()
         mavenCentral()
     }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.2'
-        classpath 'digital.wup:android-maven-publish:3.6.3'
+        classpath 'io.github.gradle-nexus:publish-plugin:1.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -24,7 +22,7 @@ buildscript {
 }
 
 plugins {
-    id "net.linguica.maven-settings" version "0.5"
+    id "io.github.gradle-nexus.publish-plugin" version "1.1.0"
 }
 
 allprojects {
@@ -34,15 +32,13 @@ allprojects {
     }
 }
 
-ext.coalesce = { param1, param2 -> return param1 != null ? param1 : param2 }
-ext.getPublishVersion = { -> return coalesce(System.getenv("BUILD_BUILDNUMBER"), "1.0") }
-ext.getPublishUserName = { ->
-    return coalesce(System.getenv("PACKAGING_USERNAME"), "AZURE_ARTIFACTS")
+ext{
+    groupId = 'software.tingle'
+    publishVersion = System.getenv("BUILD_BUILDNUMBER") ?: "1.0"
+    publishUsername = System.getenv("PUBLISHING_USERNAME") ?: ""
+    publishPassword = System.getenv("PUBLISHING_PASSWORD") ?: "dummy"
+    publishUrl = System.getenv("PUBLISHING_URL") ?: "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
 }
-ext.getPublishPassword = { ->
-    return coalesce(System.getenv("AZURE_ARTIFACTS_ENV_ACCESS_TOKEN"), "dummy")
-}
-ext.getPublishUrl = { -> return coalesce(System.getenv("PACKAGING_URL"), "${vsts_url}") }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
