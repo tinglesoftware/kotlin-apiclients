@@ -36,7 +36,8 @@ ext {
     groupId = 'software.tingle'
     publishVersion = System.getenv("BUILD_BUILDNUMBER") ?: "1.0"
     publishUsername = System.getenv("PUBLISHING_USERNAME") ?: ""
-    publishPassword = System.getenv("PUBLISHING_PASSWORD") ?: "dummy"
+    publishPassword = System.getenv("PUBLISHING_PASSWORD") ?: ""
+    publishStagingProfileId = System.getenv("PUBLISHING_PROFILE_ID") ?: ""
     publishUrl = System.getenv("PUBLISHING_URL") ?: "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
 }
 
@@ -48,6 +49,7 @@ ext["signing.secretKeyRingFile"] = System.getenv("")
 nexusPublishing {
     repositories {
         sonatype {
+            stagingProfileId = publishStagingProfileId
             username = publishUsername
             password = publishPassword
         }
