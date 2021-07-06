@@ -11,6 +11,8 @@ trigger:
 
 variables:
 - group: 'Tingle GPG Key' # contains SigningKeyId, SigningName, and SigningPassword
+- name: gpgFileName
+  value: 'tingle.gpg'
 - name: wrapperScript
   value: 'gradlew' # 'gradlew.bat' is for a Windows environment, use 'gradlew' for UNIX e.g. Ubuntu/MacOS
 
@@ -39,6 +41,17 @@ stages:
           inputs:
             useConfigFile: true
             configFilePath: '$(Build.SourcesDirectory)/GitVersion.yml'
+        
+        - task: DownloadSecureFile@1
+          name: 'GPG'
+          displayName: 'Download GPG'
+          inputs:
+              secureFile: '$(gpgFileName)'
+
+        - task: Bash@3
+          inputs:
+            targetType: 'inline'
+            script: echo $(GPG.secureFilePath)
 
         # TODO: add tasks for build and test before assembling
 
@@ -81,6 +94,12 @@ stages:
         vmImage: 'ubuntu-latest'
         
       steps:
+      - task: DownloadSecureFile@1
+        name: 'GPG'
+        displayName: 'Download GPG'
+        inputs:
+            secureFile: '$(gpgFileName)'
+
       - task: Gradle@1
         displayName: 'gradlew publish --stacktrace'
         inputs:
