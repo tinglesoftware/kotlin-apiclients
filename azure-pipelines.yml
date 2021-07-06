@@ -96,8 +96,8 @@ stages:
             secureFile: '$(gpgFileName)'
 
       - task: Gradle@1
-        displayName: 'gradlew publish --stacktrace'
+        displayName: 'gradlew publishReleasePublicationToSonatypeRepository --stacktrace'
         inputs:
             gradleWrapperFile: '$(wrapperScript)'
-            tasks: 'publish --stacktrace'
+            tasks: 'publishReleasePublicationToSonatypeRepository --stacktrace'
             publishJUnitResults: false
