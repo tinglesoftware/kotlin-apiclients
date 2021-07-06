@@ -33,7 +33,7 @@ afterEvaluate {
 
                 groupId = "${groupId}"
                 artifactId = "${project.name}"
-                version = publishVersion
+                version = getPublishVersion()
 
                 pom {
                     name = project.name
@@ -68,10 +68,10 @@ afterEvaluate {
 
         repositories {
             maven {
-                url publishUrl
+                url getPublishUrl()
                 credentials {
-                    username publishUsername
-                    password publishPassword
+                    username getPublishUsername()
+                    password getPublishPassword()
                 }
             }
         }

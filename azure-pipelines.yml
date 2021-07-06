@@ -48,11 +48,6 @@ stages:
           inputs:
               secureFile: '$(gpgFileName)'
 
-        - task: Bash@3
-          inputs:
-            targetType: 'inline'
-            script: "echo $(PUBLISHING_PASSWORD) Profile: $(PUBLISHING_PROFILE_ID)"
-
         # TODO: add tasks for build and test before assembling
 
         - task: Gradle@2
