@@ -46,11 +46,15 @@ ext["signing.secretKeyRingFile"] = System.getenv("GPG_SECURE_FILE_PATH")
 
 
 nexusPublishing {
+    packageGroup = "${groupId}"
+
     repositories {
         sonatype {
             stagingProfileId = getPublishStagingProfileId()
-            username = getPublishUsername()
-            password = getPublishPassword()
+            username = "seth.onyango"
+            password = "uiENB0iMXPn#"
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
         }
     }
 }
