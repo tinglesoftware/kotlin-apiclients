@@ -14,7 +14,7 @@ variables:
 - name: gpgFileName
   value: 'tingle.gpg'
 - name: gpgFilePath
-  value: '$(Pipeline.Workspace)/tingle.gpg'
+  value: '/home/vsts/work/_temp/tingle.gpg'
 - name: wrapperScript
   value: 'gradlew' # 'gradlew.bat' is for a Windows environment, use 'gradlew' for UNIX e.g. Ubuntu/MacOS
 

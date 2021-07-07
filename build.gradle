@@ -42,7 +42,7 @@ ext.getPublishUrl = { -> return System.getenv("PUBLISHING_URL") ?: "https://oss.
 
 ext["signing.keyId"] = System.getenv("SigningKeyId")
 ext["signing.password"] = System.getenv("SigningPassword")
-ext["signing.secretKeyRingFile"] = System.getenv("Gpg.securefilepath")
+ext["signing.secretKeyRingFile"] = System.getenv("gpgFilePath")
 
 
 nexusPublishing {
