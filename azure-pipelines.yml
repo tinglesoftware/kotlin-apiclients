@@ -13,6 +13,8 @@ variables:
 - group: 'Tingle GPG Key' # contains SigningKeyId, SigningName, and SigningPassword
 - name: gpgFileName
   value: 'tingle.gpg'
+- name: gpgFilePath
+  value: '$(Pipeline.Workspace)/tingle.gpg'
 - name: wrapperScript
   value: 'gradlew' # 'gradlew.bat' is for a Windows environment, use 'gradlew' for UNIX e.g. Ubuntu/MacOS
 
@@ -42,12 +44,6 @@ stages:
             useConfigFile: true
             configFilePath: '$(Build.SourcesDirectory)/GitVersion.yml'
         
-        - task: DownloadSecureFile@1
-          name: 'GPG'
-          displayName: 'Download GPG'
-          inputs:
-              secureFile: '$(gpgFileName)'
-
         # TODO: add tasks for build and test before assembling
 
         - task: Gradle@2
@@ -90,10 +86,13 @@ stages:
         
       steps:
       - task: DownloadSecureFile@1
-        name: 'GPG'
+        name: 'Gpg'
         displayName: 'Download GPG'
         inputs:
             secureFile: '$(gpgFileName)'
+
+      - script: |
+          echo "Download path $(Gpg.securefilepath) $(gpgFilePath)"
 
       - task: Gradle@1
         displayName: 'gradlew publishReleasePublicationToSonatypeRepository --stacktrace'
