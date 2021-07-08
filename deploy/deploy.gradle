@@ -63,6 +63,29 @@ afterEvaluate {
                         }
                     }
                 }
+
+                pom.withXml {
+                    final dependenciesNode = asNode().appendNode("dependencies")
+                    ext.addDependency = { dep, scope ->
+                        logger.lifecycle("updating dep $dep")
+                        if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified") {
+                            return // invalid dependencies should be ignored
+                        }
+
+                        final depGroup = dep.group
+                        final depName = dep.name
+                        final depVersion = dep.version
+
+                        final dependencyNode = dependenciesNode.appendNode("dependency")
+                        dependencyNode.appendNode("groupId", depGroup)
+                        dependencyNode.appendNode("artifactId", depName)
+                        dependencyNode.appendNode("version", depVersion)
+                        dependencyNode.appendNode("scope", scope)
+
+                    }
+                    configurations.api.getDependencies().each { dep -> addDependency(dep, "compile") }
+                    configurations.implementation.getDependencies().each { dep -> addDependency(dep, "runtime") }
+                }
             }
         }
 
