@@ -6,7 +6,7 @@ buildscript {
     ext.compile_sdk_version = 30
     ext.target_sdk_version = 30
 
-    ext.groupId = 'software.tingle'
+    ext.group_id = 'software.tingle'
 
     repositories {
         google()
@@ -46,8 +46,6 @@ ext["signing.secretKeyRingFile"] = System.getenv("SIGNING_FILE_PATH")
 
 
 nexusPublishing {
-    packageGroup = "${groupId}"
-
     repositories {
         sonatype {
             stagingProfileId = getPublishStagingProfileId()

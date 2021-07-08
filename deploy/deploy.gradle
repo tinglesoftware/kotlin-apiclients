@@ -31,9 +31,9 @@ afterEvaluate {
                 artifact androidSourcesJar
                 artifact bundleReleaseAar
 
-                groupId = "${groupId}"
-                artifactId = "${project.name}"
-                version = getPublishVersion()
+                groupId "${group_id}"
+                artifactId "${project.name}"
+                version getPublishVersion()
 
                 pom {
                     name = project.name

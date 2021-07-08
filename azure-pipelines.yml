@@ -13,8 +13,6 @@ variables:
 - group: 'Tingle GPG Key' # contains SigningKeyId, SigningName, and SigningPassword
 - name: gpgFileName
   value: 'tingle.gpg'
-- name: gpgFilePath
-  value: '/home/vsts/work/_temp/tingle.gpg'
 - name: wrapperScript
   value: 'gradlew' # 'gradlew.bat' is for a Windows environment, use 'gradlew' for UNIX e.g. Ubuntu/MacOS
 
@@ -90,9 +88,6 @@ stages:
         displayName: 'Download GPG'
         inputs:
             secureFile: '$(gpgFileName)'
-
-      - script: |
-          echo "Download path $(Gpg.securefilepath) $(gpgFilePath)"
 
       - task: Gradle@1
         displayName: 'gradlew publishReleasePublicationToSonatypeRepository --stacktrace'
