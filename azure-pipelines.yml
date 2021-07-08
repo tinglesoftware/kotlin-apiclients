@@ -90,8 +90,8 @@ stages:
             secureFile: '$(gpgFileName)'
 
       - task: Gradle@1
-        displayName: 'gradlew publishReleasePublicationToSonatypeRepository --stacktrace'
+        displayName: 'Publish To Maven Central'
         inputs:
             gradleWrapperFile: '$(wrapperScript)'
-            tasks: 'publishReleasePublicationToSonatypeRepository --stacktrace'
+            tasks: 'publishReleasePublicationToSonatypeRepository --max-workers 1 closeAndReleaseSonatypeStagingRepository --stacktrace'
             publishJUnitResults: false
