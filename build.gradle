@@ -3,8 +3,8 @@
 buildscript {
     ext.kotlin_version = '1.5.20'
     ext.min_sdk_version = 21
-    ext.compile_sdk_version = 30
-    ext.target_sdk_version = 30
+    ext.compile_sdk_version = 32
+    ext.target_sdk_version = 32
 
     ext.group_id = 'software.tingle'
 
