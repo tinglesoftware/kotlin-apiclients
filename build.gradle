@@ -34,7 +34,7 @@ allprojects {
     }
 }
 
-ext.getPublishVersion = { -> return System.getenv("BUILD_BUILDNUMBER") ?: "1.0" }
+ext.getPublishVersion = { -> return System.getenv("VERSION_NAME") ?: "1.0-SNAPSHOT" }
 ext.getPublishUsername = { -> return System.getenv("PUBLISHING_USERNAME") ?: "" }
 ext.getPublishPassword = { -> return System.getenv("PUBLISHING_PASSWORD") ?: "" }
 ext.getPublishStagingProfileId = { -> return System.getenv("PUBLISHING_PROFILE_ID") ?: "" }
