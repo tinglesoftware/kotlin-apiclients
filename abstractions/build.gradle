@@ -42,7 +42,7 @@ dependencies {
     api 'com.squareup.okhttp3:okhttp:4.10.0'
     api 'com.squareup.okhttp3:logging-interceptor:4.10.0'
     api "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
-    api "com.google.firebase:firebase-auth:21.0.8"
+    api "com.google.firebase:firebase-auth:21.1.0"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4"
 
 
