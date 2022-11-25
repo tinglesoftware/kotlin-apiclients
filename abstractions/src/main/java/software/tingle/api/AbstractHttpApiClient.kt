@@ -26,7 +26,7 @@ constructor(private val authenticationProvider: IAuthenticationProvider?) {
 
     private val gson = Gson()
 
-    private val backChannel: OkHttpClient by lazy {
+    protected val backChannel: OkHttpClient by lazy {
         val provider = authenticationProvider ?: EmptyAuthenticationProvider()
         val builder = OkHttpClient.Builder()
                 .addInterceptor(provider)
