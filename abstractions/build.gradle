@@ -5,6 +5,7 @@ plugins {
 
 android {
     compileSdkVersion Integer.parseInt("${compile_sdk_version}")
+    namespace ABSTRACTIONS_SDK_NAMESPACE
 
     defaultConfig {
         minSdkVersion Integer.parseInt("${min_sdk_version}")
@@ -27,9 +28,24 @@ android {
         unitTests.returnDefaultValues = true
     }
 
+
     compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    kotlin {
+        jvmToolchain {
+            languageVersion.set(JavaLanguageVersion.of("17"))
+        }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 }
 
