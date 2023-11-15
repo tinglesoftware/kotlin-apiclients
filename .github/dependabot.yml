@@ -7,3 +7,11 @@ updates:
       day: "tuesday"
       time: "04:00"
     open-pull-requests-limit: 10
+    ignore:
+    # Ignore patch updates for some packages
+    - dependency-name: "com.android.tools.build:gradle"
+      update-types: ["version-update:semver-patch"]
+    - dependency-name: "kotlin_version"
+      update-types: ["version-update:semver-patch"]
+    - dependency-name: "com.google.firebase:firebase-auth"
+      update-types: ["version-update:semver-patch"]
