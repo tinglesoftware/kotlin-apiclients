@@ -10,7 +10,6 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.logging.HttpLoggingInterceptor
 import software.tingle.utils.CachingUtils
 import java.util.*
 
@@ -26,8 +25,11 @@ class OAuthClientCredentialProvider
  * @param scheme the scheme to be used in the Authorization header as the prefix for the header value
  * @param authRequest the request model to be used to request a token. Contains parameters like clientId, clientSecret e.t.c
  */
-(private val context: Context, scheme: String = DEFAULT_SCHEME, private val authRequest: OAuthRequest) : AuthenticationHeaderProvider(scheme) {
-
+    (
+    private val context: Context,
+    scheme: String = DEFAULT_SCHEME,
+    private val authRequest: OAuthRequest
+) : AuthenticationHeaderProvider(scheme) {
 
     /**
      * Creates an instance of @[OAuthClientCredentialProvider]
@@ -38,18 +40,22 @@ class OAuthClientCredentialProvider
      * @param resource the resource to be requested for in the token request
      */
     constructor(
-            context: Context,
-            scheme: String = DEFAULT_SCHEME,
-            authenticationEndpoint: String? = null,
-            clientId: String? = null,
-            clientSecret: String? = null,
-            resource: String? = null,
-    ) : this(context, scheme, OAuthRequest(authenticationEndpoint, clientId, clientSecret, resource))
+        context: Context,
+        scheme: String = DEFAULT_SCHEME,
+        authenticationEndpoint: String? = null,
+        clientId: String? = null,
+        clientSecret: String? = null,
+        resource: String? = null,
+    ) : this(
+        context,
+        scheme,
+        OAuthRequest(authenticationEndpoint, clientId, clientSecret, resource)
+    )
 
 
     private val backChannel: OkHttpClient = OkHttpClient
-            .Builder()
-            .build()
+        .Builder()
+        .build()
 
     /**
      * Authorize a request before executing
@@ -68,24 +74,25 @@ class OAuthClientCredentialProvider
         get() {
             // prepare the request body
             val requestBody = FormBody.Builder()
-                    .add("grant_type", "client_credentials")
-                    .add("client_id", authRequest.clientId!!)
-                    .add("client_secret", authRequest.clientSecret!!)
-                    .add("resource", authRequest.resource!!)
-                    .build()
+                .add("grant_type", "client_credentials")
+                .add("client_id", authRequest.clientId!!)
+                .add("client_secret", authRequest.clientSecret!!)
+                .add("resource", authRequest.resource!!)
+                .build()
 
             // prepare the request
             val request = Request.Builder()
-                    .url(authRequest.authenticationEndpoint!!)
-                    .post(requestBody)
-                    .build()
+                .url(authRequest.authenticationEndpoint!!)
+                .post(requestBody)
+                .build()
 
             try {
                 val response = backChannel.newCall(request).execute()
 
                 val body = response.body
                 if (response.isSuccessful && body != null) {
-                    val oAuthResponse = Gson().fromJson(body.charStream(), OAuthResponse::class.java)
+                    val oAuthResponse =
+                        Gson().fromJson(body.charStream(), OAuthResponse::class.java)
                     body.close()
                     return oAuthResponse
                 }
@@ -106,7 +113,14 @@ class OAuthClientCredentialProvider
                 // Check if we have an existing token and the token's validity.
                 val token = CachingUtils.getAccessToken(context)
                 if (!TextUtils.isEmpty(token) && !CachingUtils.hasAccessTokenExpired(context)) {
-                    Log.d(TAG, "Valid token in cache, expiry time: ${Date(CachingUtils.getAccessTokenExpiry(context))} ")
+                    Log.d(
+                        TAG,
+                        "Valid token in cache, expiry time: ${
+                            Date(
+                                CachingUtils.getAccessTokenExpiry(context)
+                            )
+                        } "
+                    )
                     return token!!
                 }
 
@@ -116,7 +130,10 @@ class OAuthClientCredentialProvider
                 val oAuthResponse = runBlocking(Dispatchers.IO) { requestOAuthToken }
 
                 if (oAuthResponse != null) {
-                    Log.d(TAG, "Valid token was acquired, expiry time: ${Date(oAuthResponse.expiresOn)} ")
+                    Log.d(
+                        TAG,
+                        "Valid token was acquired, expiry time: ${Date(oAuthResponse.expiresOn)} "
+                    )
 
                     CachingUtils.setAccessToken(context, oAuthResponse.accessToken!!)
                     CachingUtils.setAccessTokenExpiry(context, oAuthResponse.expiresIn)
@@ -166,12 +183,12 @@ class OAuthResponse {
 }
 
 data class OAuthRequest(
-        //  the authentication endpoint to be used to request a token
-        var authenticationEndpoint: String? = null,
-        // the client identifier (client_id) to be used in the token request
-        var clientId: String? = null,
-        // the client secret (client_secret) to be used in the token request
-        var clientSecret: String? = null,
-        // the resource to be requested for in the token request
-        var resource: String? = null
+    //  the authentication endpoint to be used to request a token
+    var authenticationEndpoint: String? = null,
+    // the client identifier (client_id) to be used in the token request
+    var clientId: String? = null,
+    // the client secret (client_secret) to be used in the token request
+    var clientSecret: String? = null,
+    // the resource to be requested for in the token request
+    var resource: String? = null
 )
