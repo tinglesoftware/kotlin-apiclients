@@ -7,7 +7,7 @@ updates:
       day: "tuesday"
       time: "04:00"
     reviewers:
-      - SecyWecy
+      - sethonyango
     ignore:
       # Ignore patch updates for some packages
       - dependency-name: "com.android.tools.build*"
@@ -23,3 +23,6 @@ updates:
     schedule:
       interval: "weekly"
       time: "02:00"
+    reviewers:
+      - sethonyango
+      - mburumaxwell
