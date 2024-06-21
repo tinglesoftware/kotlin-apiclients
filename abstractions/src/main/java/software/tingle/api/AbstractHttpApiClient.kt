@@ -2,6 +2,7 @@ package software.tingle.api
 
 import android.text.TextUtils
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Headers
@@ -24,12 +25,12 @@ abstract class AbstractHttpApiClient
  */
 constructor(private val authenticationProvider: IAuthenticationProvider?) {
 
-    private val gson = Gson()
+    private var gson = Gson()
 
     protected val backChannel: OkHttpClient by lazy {
         val provider = authenticationProvider ?: EmptyAuthenticationProvider()
         val builder = OkHttpClient.Builder()
-                .addInterceptor(provider)
+            .addInterceptor(provider)
 
         buildBackChannel(builder)
     }
@@ -44,7 +45,11 @@ constructor(private val authenticationProvider: IAuthenticationProvider?) {
         return builder.build()
     }
 
-    protected fun makeJson(o: Any?): String {
+    protected fun makeJson(o: Any?, builder: GsonBuilder? = null): String {
+        if (builder != null) {
+            gson = builder.create()
+        }
+        
         return gson.toJson(o)
     }
 
@@ -61,11 +66,18 @@ constructor(private val authenticationProvider: IAuthenticationProvider?) {
      */
     @Throws(IOException::class)
     protected fun <TResult> execute(
-            builder: Request.Builder,
-            classOfTResult: Class<TResult>?): ResourceResponse<TResult> {
+        builder: Request.Builder,
+        classOfTResult: Class<TResult>?
+    ): ResourceResponse<TResult> {
 
-        val func = object : Function<Int, Headers, TResult, HttpApiResponseProblem, ResourceResponse<TResult>> {
-            override fun apply(t1: Int, t2: Headers, t3: TResult?, t4: HttpApiResponseProblem?): ResourceResponse<TResult> {
+        val func = object :
+            Function<Int, Headers, TResult, HttpApiResponseProblem, ResourceResponse<TResult>> {
+            override fun apply(
+                t1: Int,
+                t2: Headers,
+                t3: TResult?,
+                t4: HttpApiResponseProblem?
+            ): ResourceResponse<TResult> {
                 return ResourceResponse(t1, t2, t3, t4)
             }
 
@@ -88,11 +100,18 @@ constructor(private val authenticationProvider: IAuthenticationProvider?) {
      */
     @Throws(IOException::class)
     protected suspend fun <TResult> executeAsync(
-            builder: Request.Builder,
-            classOfTResult: Class<TResult>?): ResourceResponse<TResult> {
+        builder: Request.Builder,
+        classOfTResult: Class<TResult>?
+    ): ResourceResponse<TResult> {
 
-        val func = object : Function<Int, Headers, TResult, HttpApiResponseProblem, ResourceResponse<TResult>> {
-            override fun apply(t1: Int, t2: Headers, t3: TResult?, t4: HttpApiResponseProblem?): ResourceResponse<TResult> {
+        val func = object :
+            Function<Int, Headers, TResult, HttpApiResponseProblem, ResourceResponse<TResult>> {
+            override fun apply(
+                t1: Int,
+                t2: Headers,
+                t3: TResult?,
+                t4: HttpApiResponseProblem?
+            ): ResourceResponse<TResult> {
                 return ResourceResponse(t1, t2, t3, t4)
             }
 
@@ -118,12 +137,19 @@ constructor(private val authenticationProvider: IAuthenticationProvider?) {
     </TError></TResult> */
     @Throws(IOException::class)
     protected fun <TResult, TError> execute(
-            builder: Request.Builder,
-            classOfTResult: Class<TResult>?,
-            classOfTError: Class<TError>): CustomResourceResponse<TResult, TError> {
+        builder: Request.Builder,
+        classOfTResult: Class<TResult>?,
+        classOfTError: Class<TError>
+    ): CustomResourceResponse<TResult, TError> {
 
-        val func = object : Function<Int, Headers, TResult, TError, CustomResourceResponse<TResult, TError>> {
-            override fun apply(t1: Int, t2: Headers, t3: TResult?, t4: TError?): CustomResourceResponse<TResult, TError> {
+        val func = object :
+            Function<Int, Headers, TResult, TError, CustomResourceResponse<TResult, TError>> {
+            override fun apply(
+                t1: Int,
+                t2: Headers,
+                t3: TResult?,
+                t4: TError?
+            ): CustomResourceResponse<TResult, TError> {
                 return CustomResourceResponse(t1, t2, t3, t4)
             }
 
@@ -149,12 +175,19 @@ constructor(private val authenticationProvider: IAuthenticationProvider?) {
     </TError></TResult> */
     @Throws(IOException::class)
     protected suspend fun <TResult, TError> executeAsync(
-            builder: Request.Builder,
-            classOfTResult: Class<TResult>?,
-            classOfTError: Class<TError>): CustomResourceResponse<TResult, TError> {
+        builder: Request.Builder,
+        classOfTResult: Class<TResult>?,
+        classOfTError: Class<TError>
+    ): CustomResourceResponse<TResult, TError> {
 
-        val func = object : Function<Int, Headers, TResult, TError, CustomResourceResponse<TResult, TError>> {
-            override fun apply(t1: Int, t2: Headers, t3: TResult?, t4: TError?): CustomResourceResponse<TResult, TError> {
+        val func = object :
+            Function<Int, Headers, TResult, TError, CustomResourceResponse<TResult, TError>> {
+            override fun apply(
+                t1: Int,
+                t2: Headers,
+                t3: TResult?,
+                t4: TError?
+            ): CustomResourceResponse<TResult, TError> {
                 return CustomResourceResponse(t1, t2, t3, t4)
             }
 
@@ -182,10 +215,11 @@ constructor(private val authenticationProvider: IAuthenticationProvider?) {
     </TResourceResponse></TError></TResource> */
     @Throws(IOException::class)
     protected fun <TResource, TError, TResourceResponse : CustomResourceResponse<TResource, TError>> execute(
-            builder: Request.Builder,
-            classOfTResult: Class<TResource>?,
-            classOfTError: Class<TError>,
-            resultBuilderFunction: Function<Int, Headers, TResource, TError, TResourceResponse>): TResourceResponse {
+        builder: Request.Builder,
+        classOfTResult: Class<TResource>?,
+        classOfTError: Class<TError>,
+        resultBuilderFunction: Function<Int, Headers, TResource, TError, TResourceResponse>
+    ): TResourceResponse {
 
         val request = builder.build()
         val response = backChannel.newCall(request).execute()
@@ -202,11 +236,13 @@ constructor(private val authenticationProvider: IAuthenticationProvider?) {
                 204 -> {
                     val contentType = body.contentType()
                     val subType = contentType?.subtype
-                    val hasJsonSubType = !TextUtils.isEmpty(subType) && subType!!.contains("json", true)
+                    val hasJsonSubType =
+                        !TextUtils.isEmpty(subType) && subType!!.contains("json", true)
                     if (hasJsonSubType && classOfTResult != null) {
                         resource = gson.fromJson(body.charStream(), classOfTResult)
                     }
                 }
+
                 400 -> errorModel = gson.fromJson(body.charStream(), classOfTError)
             }
 
@@ -230,5 +266,6 @@ constructor(private val authenticationProvider: IAuthenticationProvider?) {
         val MEDIA_TYPE_TEXT_JSON = "text/json".toMediaType()
         val MEDIA_TYPE_PATH_JSON = "application/json-path+json".toMediaType()
         val MEDIA_TYPE_PLUS_JSON = "application/*+json".toMediaType()
+        val MEDIA_TYPE_PATCH_MERGE = "application/merge-patch+json".toMediaType()
     }
 }
