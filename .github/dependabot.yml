@@ -3,11 +3,11 @@ updates:
   - package-ecosystem: "gradle"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
       day: "tuesday"
       time: "04:00"
     reviewers:
-      - sethonyango
+      - mburumaxwell
     ignore:
       # Ignore patch updates for some packages
       - dependency-name: "com.android.tools.build*"
@@ -18,11 +18,11 @@ updates:
         update-types: ["version-update:semver-patch"]
       - dependency-name: "com.google.firebase*"
         update-types: ["version-update:semver-patch"]
+    open-pull-requests-limit: 20
   - package-ecosystem: "github-actions" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
-      interval: "weekly"
+      interval: "monthly"
       time: "02:00"
     reviewers:
-      - sethonyango
       - mburumaxwell
